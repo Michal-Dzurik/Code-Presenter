@@ -1,7 +1,7 @@
 import * as React from "react";
 import "../index.css";
 
-export const NavbarSpace = (): React.ReactElement => {
+export const NavigationSpace = (): React.ReactElement => {
     return (
         <div style={{height: "68px", width: "100%"}}></div>
     );

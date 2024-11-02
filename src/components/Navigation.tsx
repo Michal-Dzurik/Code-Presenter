@@ -1,17 +1,11 @@
 import * as React from "react";
 import "../index.css";
-import {useEffect, useRef, useState} from "react";
 import { Link } from "react-router-dom";
-import {AuthData} from "../interfaces/AuthData";
-import {AuthDataMutable} from "../interfaces/AuthDataMutable";
+import {useAuth} from "../providers/AuthProvider";
 
-interface Props extends AuthDataMutable{
-}
 
-export const Navigation = (props: Props): React.ReactElement => {
-    const isLoggedIn = () => {
-        return props.loggedInUser;
-    };
+export const Navigation = (): React.ReactElement => {
+    const {user, logIn, logOut, isLoggedIn} = useAuth();
 
     return (
         <div className="navbar bg-base-200 fixed">
@@ -23,21 +17,21 @@ export const Navigation = (props: Props): React.ReactElement => {
                 <div className="dropdown dropdown-end mr-4">
                     <div tabIndex={0} role="button" className="btn btn-ghost btn-circle avatar">
                         <div className="w-10 rounded-full">
-                            <img alt="Tailwind CSS Navbar component" src={props.loggedInUser && props.loggedInUser.photoURL ? props.loggedInUser.photoURL : "" }/>
+                            <img alt="Tailwind CSS Navbar component" src={user && user.photoURL ? user.photoURL : "" }/>
                         </div>
                     </div>
                     <ul
                         tabIndex={0}
                         className="menu menu-sm dropdown-content bg-base-100 rounded-box z-[1] mt-3 w-52 p-2 shadow">
-                        <li><a onClick={props.logOut}>Logout</a></li>
+                        <li><a onClick={logOut}>Logout</a></li>
                     </ul>
                 </div>
                 )
                 : (
-                <div className="navbar-center hidden lg:flex">
+                <div className="navbar-center lg:flex">
                     <ul className="menu menu-horizontal px-1">
                         <li>
-                            <button onClick={props.logIn} type="button"
+                            <button onClick={logIn} type="button"
                                     className="text-white bg-[#4285F4] hover:bg-[#4285F4]/90 focus:ring-4 focus:ring-[#4285F4]/50 font-medium rounded-lg text-sm px-5 py-2.5 text-center inline-flex items-center dark:focus:ring-[#4285F4]/55 mr-2 mb-2">
                                 <svg className="mr-2 -ml-1 w-4 h-4" aria-hidden="true" focusable="false"
                                      data-prefix="fab" data-icon="google" role="img" xmlns="http://www.w3.org/2000/svg"

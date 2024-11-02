@@ -1,11 +1,9 @@
 import * as React from "react";
 import "../index.css";
-import {AuthData} from "../interfaces/AuthData";
+import {Link} from "react-router-dom";
 
-interface Props extends AuthData{
-}
 
-export const Home = (props: Props): React.ReactElement => {
+export const Home = (): React.ReactElement => {
     return (
         <>
 
@@ -17,7 +15,7 @@ export const Home = (props: Props): React.ReactElement => {
                             This is the best way to present gift, discount, steam or any kind of code to your loved
                             ones. You can choose from various of styles.
                         </p>
-                        <button className="btn btn-primary">Let's do it!</button>
+                        <Link to='/editor' className="btn btn-primary">Let's do it!</Link>
                     </div>
                 </div>
             </div>

@@ -1,5 +1,5 @@
 import {Navigation} from "./components/Navigation";
-import {BrowserRouter, Route, Routes} from "react-router-dom";
+import {BrowserRouter, Navigate, redirect, Route, Routes} from "react-router-dom";
 import {Home} from "./routes/Home";
 import {NotFound} from "./routes/404";
 import * as React from "react";
@@ -7,43 +7,31 @@ import {useEffect, useState} from "react";
 import {signInWithPopup, signOut, User, UserCredential} from "firebase/auth";
 import {auth, googleAuth} from "./firebase-config";
 import {saveAuthUser,getAuthUser} from './heplers'
+import {Editor} from "./routes/Editor";
+import {ShowCard} from "./routes/ShowCard";
+import {AuthProvider} from "./providers/AuthProvider";
 
 function App() {
-  const [loggedInUser, setLoggedInUser] = useState<User|null>(null);
-
-  useEffect(() => {
-    setLoggedInUser(getAuthUser() || null);
-  }, []);
-
-  const logIn = async () =>{
-    try{
-      await signInWithPopup(auth,googleAuth).then( (data: UserCredential) => {
-        setLoggedInUser(data?.user);
-        saveAuthUser(data?.user);
-      })
-    }
-    catch (error) { console.error(error); }
-  }
-
-  const logOut = async () =>{
-
-    try {
-      await signOut(auth).then( () => {
-        setLoggedInUser(null);
-        saveAuthUser(null);
-      });
-    }
-    catch (error) { console.error(error); }
-  }
 
   return (
       <BrowserRouter>
-        <Navigation loggedInUser={loggedInUser} logIn={logIn} logOut={logOut}/>
+        <AuthProvider>
+          <Navigation/>
 
-        <Routes>
-          <Route path="/" element={<Home loggedInUser={loggedInUser}/>}/>
-          <Route path="/*" element={<NotFound/>}/>
-        </Routes>
+          <Routes>
+            <Route path="/" element={<Home/>}/>
+
+            <Route path="/editor/:id?" element={<Editor/>}/>
+
+            <Route path="/cards/:id" element={<ShowCard />} />
+
+            <Route path="/404" element={<NotFound/>} />
+
+            <Route path="/*" element={<Navigate to="/404" replace />} />
+
+
+          </Routes>
+        </AuthProvider>
       </BrowserRouter>
   );
 }
