@@ -1,6 +1,5 @@
 import {CardData} from "./CardData";
 
-export interface CardDataResponse {
+export interface CardDataResponse extends CardData{
     data: CardData,
-    uid?: string,
 }

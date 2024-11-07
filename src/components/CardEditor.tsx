@@ -34,7 +34,7 @@ export const CardEditor = (props: Props): React.ReactElement => {
     }
 
     return (
-        <div className="relative w-72 rounded-xl shadow-lg flex flex-col items-center p-4 ml-4">
+        <div className="relative w-72 rounded-xl flex flex-col items-center p-4 ml-4">
             <label className="form-control w-full max-w-xs">
                 <div className="label">
                     <span className="label-text">Heading</span>

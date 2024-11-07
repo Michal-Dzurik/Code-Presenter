@@ -10,6 +10,7 @@ import {saveAuthUser,getAuthUser} from './heplers'
 import {Editor} from "./routes/Editor";
 import {ShowCard} from "./routes/ShowCard";
 import {AuthProvider} from "./providers/AuthProvider";
+import {MyCards} from "./routes/MyCards";
 
 function App() {
 
@@ -24,6 +25,8 @@ function App() {
             <Route path="/editor/:id?" element={<Editor/>}/>
 
             <Route path="/cards/:id" element={<ShowCard />} />
+
+            <Route path="/my-codes" element={<MyCards />} /> // TODO: implement my codes site
 
             <Route path="/404" element={<NotFound/>} />
 

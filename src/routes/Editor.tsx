@@ -6,11 +6,12 @@ import {startCase} from "lodash";
 import { CardData } from "../interfaces/CardData";
 import { CardEditorData } from "../interfaces/CardEditorData";
 import { CardEditor } from "../components/CardEditor";
-import {auth, database} from "../firebase-config";
-import {addDoc, collection, doc, getDoc, setDoc} from "firebase/firestore";
+import { database} from "../firebase-config";
+import {addDoc, collection, deleteDoc, doc, getDoc, setDoc} from "firebase/firestore";
 import {CardDataResponse} from "../interfaces/CardDataResponse";
-import {Link, useNavigate, useParams} from "react-router-dom";
+import { useNavigate, useParams} from "react-router-dom";
 import {useAuth} from "../providers/AuthProvider";
+import {CardControls} from "../components/CardControls";
 
 export const Editor = (): React.ReactElement => {
     const { id } = useParams<string>();
@@ -18,13 +19,16 @@ export const Editor = (): React.ReactElement => {
     const {user, isLoggedIn, ready} = useAuth();
     const navigate = useNavigate();
 
-    const [cardHref, setCardHref] = useState<string|null>(null)
-    const [cardData, setCardData] = useState<CardData>({
+    const cardDataDefault: CardData = {
         heading: '',
         code: '',
         applicableAt: '',
         type: 0,
-    });
+        uid: null,
+    };
+
+    const [syncId, setSyncId] = useState<string|null>(null)
+    const [cardData, setCardData] = useState<CardData>(cardDataDefault);
 
     const setHeading = (heading: string): void => {
         setCardData((prev) => ({ ...prev, heading }));
@@ -41,6 +45,9 @@ export const Editor = (): React.ReactElement => {
     const setType = (type: number): void => {
         setCardData((prev) => ({ ...prev, type }));
     };
+    const setId = (id?: string): void => {
+        setCardData((prev) => ({ ...prev, id: id }));
+    };
 
     const [cardEditorData] = useState<CardEditorData>({
         setHeading: setHeading,
@@ -55,67 +62,83 @@ export const Editor = (): React.ReactElement => {
                 return;
             }
 
-            if (ready){
+            setSyncId(id)
+            setId(id)
+
+            if (ready && cardData.id){
                 try {
-                    const docRef: any = doc(database, "cards", id);
+                    const docRef: any = doc(database, "cards", cardData.id || '');
                     const response = await getDoc(docRef);
 
                     if (response.exists()) {
                         const data: CardDataResponse = response.data() as CardDataResponse;
 
                         if (isLoggedIn() && data.uid === user?.uid) {
-                            setCardData(data.data);
+                            setCardData(data);
                             setLoaded(true);
                             return;
                         }
-                        else navigate('/404')
+                        else navigate('/404');
 
                     } else {
                         console.error("No such document!");
+                        navigate('/404')
                     }
                 } catch (error) {
-                    console.error("Error fetching document: " + id);
+                    console.error("Error fetching document: " + cardData.id || '');
+                    navigate('/404')
                 }
+
             }
 
         };
 
         fetchDocument();
-    },[ready])
+    },[ready, cardData.id])
+
+    const deleteCard = async (id: string) => {
+        try {
+            const docRef = doc(database, 'cards', id);
+            await deleteDoc(docRef);
+
+            setSyncId(null)
+            setId(undefined)
+            setCardData(cardDataDefault)
+        }catch(error) {
+            console.error("Error deleting card: " + id);
+        }
+    }
 
     const cardTypes = {
-        1: <GiftCard cardData={cardData} cardEditorData={cardEditorData} />,
+        1: <GiftCard onDelete={(id: string) => deleteCard(id)} cardData={cardData} cardEditorData={cardEditorData} />,
     };
+
 
     const optionTitle = (str: string) => startCase(str);
 
     const saveCard = async () => {
-        if (!id){
-            const documentReference = await addDoc(collection(database, 'cards'),{
-                data: cardData,
-                uid: auth.currentUser?.uid
-            })
-            setCardHref(documentReference.id);
+        if (!id && !cardData.id){
+            const documentReference = await addDoc(collection(database, 'cards'),{ ...cardData, uid: user?.uid })
+            setSyncId(documentReference.id);
+            setId(documentReference.id);
             return;
         }
-        await setDoc(doc(database, "cards", id), {
-            data: cardData
-        }, {
+        await setDoc(doc(database, "cards", cardData.id || ''), { ...cardData, uid: user?.uid }, {
             merge: true
         });
 
-        setCardHref(id);
-
+        setId(cardData.id || undefined)
+        setSyncId(cardData.id || '' );
     };
 
     return (
         <>
-            { !id || loaded ? (
+            { !cardData.id || loaded ? (
                 <div className="flex justify-center items-center h-screen w-screen flex-col">
-                    { !cardHref ? (
+                    <div className='flex justify-center items-center content-center flex-row mb-8'>
                         <select
                             value={cardData.type}
-                            className="select select-bordered w-full max-w-xs mb-8"
+                            className="select select-bordered w-full max-w-xs"
                             onChange={(event: ChangeEvent<HTMLSelectElement>) =>
                                 setType(parseInt(event.target.value, 10))
                             }
@@ -129,10 +152,16 @@ export const Editor = (): React.ReactElement => {
                                 </option>
                             ))}
                         </select>
-                    ) : ''}
+                        {syncId ? (
+                            <CardControls onDelete={(id: string) => deleteCard(id)} deleteOnly={true} cardId={syncId}/>
+                        ) : ''}
+                    </div>
                     <div className="flex justify-center items-center flex-row">
-                        <GiftCard cardEditorData={cardEditorData} cardData={cardData}/>
-                        {cardData.type !== 0 && !cardHref ? (
+                        { cardData.type !== 0 ? (
+                            <GiftCard onDelete={(id: string) => deleteCard(id)} cardData={cardData} cardEditorData={cardEditorData} />
+                        ) : '' }
+
+                        {cardData.type !== 0 ? (
                             <>
                                 <CardEditor saveCard={saveCard} cardEditorData={cardEditorData} cardData={cardData}/>
                             </>
@@ -140,12 +169,6 @@ export const Editor = (): React.ReactElement => {
                             ''
                         )}
                     </div>
-                    {cardHref ? (
-                        <div className='mt-4'>
-                            <Link to={`/cards/${cardHref}`} className="link link-primary mr-6">View</Link>
-                            <Link to={`/editor/${cardHref}`} className="btn btn-primary btn-sm">Edit</Link>
-                        </div>
-                    ) : ''}
                 </div>
             ) : ''}
 

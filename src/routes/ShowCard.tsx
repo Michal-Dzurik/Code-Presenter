@@ -20,6 +20,7 @@ export const ShowCard = (props: Props): React.ReactElement => {
         code: '',
         applicableAt: '',
         type: 0,
+        uid: null
     });
 
 
@@ -42,7 +43,7 @@ export const ShowCard = (props: Props): React.ReactElement => {
 
                 if (response.exists()) {
                     const data: CardDataResponse = response.data() as CardDataResponse;
-                    setCardData(data.data);
+                    setCardData(data);
                 } else {
                     console.error("No such document!");
                 }
@@ -59,7 +60,7 @@ export const ShowCard = (props: Props): React.ReactElement => {
             <Confetti />
             <div className="flex justify-center items-center h-screen w-screen">
                 { cardData.type !== 0 ? (
-                    <GiftCard cardData={cardData} cardEditorData={cardEditorData} />
+                    <GiftCard onDelete={ (id: string)=> {}} cardData={cardData} cardEditorData={cardEditorData} />
                 ) : ''}
 
             </div>
