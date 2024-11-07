@@ -9,7 +9,7 @@ import { CardEditor } from "../components/CardEditor";
 import { database} from "../firebase-config";
 import {addDoc, collection, deleteDoc, doc, getDoc, setDoc} from "firebase/firestore";
 import {CardDataResponse} from "../interfaces/CardDataResponse";
-import { useNavigate, useParams} from "react-router-dom";
+import {useNavigate, useParams} from "react-router-dom";
 import {useAuth} from "../providers/AuthProvider";
 import {CardControls} from "../components/CardControls";
 
@@ -153,7 +153,7 @@ export const Editor = (): React.ReactElement => {
                             ))}
                         </select>
                         {syncId ? (
-                            <CardControls onDelete={(id: string) => deleteCard(id)} deleteOnly={true} cardId={syncId}/>
+                            <CardControls onDelete={(id: string) => deleteCard(id)} editorVersion={true} cardId={syncId}/>
                         ) : ''}
                     </div>
                     <div className="flex justify-center items-center flex-row">

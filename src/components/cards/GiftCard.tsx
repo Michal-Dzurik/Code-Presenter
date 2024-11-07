@@ -36,7 +36,7 @@ export const GiftCard = (props :Props): React.ReactElement => {
 
                         <p className='mt-2 text-xs text-slate-500 text-center absolute bottom-6 left-1/2 transform -translate-x-1/2 w-3/4'>
                             {ready && isLoggedIn() && id ? (
-                                <CardControls onDelete={onDelete} cardId={id} smallVersion={smallVersion}></CardControls>
+                                <CardControls onDelete={onDelete} cardId={id} editorVersion={!smallVersion}></CardControls>
                             ) : ''}
                         </p>
 
@@ -65,7 +65,7 @@ export const GiftCard = (props :Props): React.ReactElement => {
                         <CodeView code={code}/>
                     </div>
                     { off && ready && isLoggedIn() && id ? (
-                        <CardControls onDelete={onDelete} cardId={id}/>
+                        <CardControls editorVersion={true} onDelete={onDelete} cardId={id}/>
                     ) : '' }
 
                 </>
