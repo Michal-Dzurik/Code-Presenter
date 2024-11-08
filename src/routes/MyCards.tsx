@@ -62,8 +62,8 @@ export const MyCards = (props: Props): React.ReactElement => {
                     <h3 className='text-center text-2xl text-white'>My codes</h3>
                 </div>
                 { cardsData.map(card => (
-                    <div className='mb-4 mx-2'>
-                        <GiftCard onDelete={deleteCard} off={true} smallVersion={true} cardData={card} key={card.id}/>
+                    <div className='mb-4 mx-2' key={card.id}>
+                        <GiftCard onDelete={deleteCard} off={true} smallVersion={true} passedCard={card} />
                     </div>
                 ))}
             </div>

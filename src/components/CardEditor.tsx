@@ -1,24 +1,25 @@
 import * as React from "react";
 import "../index.css";
-import {ChangeEvent, useState} from "react";
-import {CardData} from "../interfaces/CardData";
-import {CardEditorData} from "../interfaces/CardEditorData";
+import {ChangeEvent} from "react";
+import {useDispatch, useSelector} from "react-redux";
+import {RootState} from "../store";
+import {setApplicableAt, setCode, setHeading} from "./redux/features/card";
 
 interface Props{
     saveCard: () => void,
-    cardEditorData: CardEditorData,
-    cardData: CardData,
 }
 
 export const CardEditor = (props: Props): React.ReactElement => {
-    const {setHeading, setCode, setApplicableAt} = props.cardEditorData;
-    const cardData = props.cardData;
+    const dispatch = useDispatch();
     const {saveCard} = props;
 
+    const id = useSelector((state: RootState) => state.card.id)
+    const card = useSelector((state: RootState) => state.card.card)
+
     const isSubmitValid = () => {
-        if (!cardData.heading || cardData.heading.trim() === '') return false;
-        if (!cardData.code || cardData.code.trim() === '') return false;
-        if (!cardData.applicableAt || cardData.applicableAt.trim() === '') return false;
+        if (!card.heading || card.heading.trim() === '') return false;
+        if (!card.code || card.code.trim() === '') return false;
+        if (!card.applicableAt || card.applicableAt.trim() === '') return false;
 
         return true;
     }
@@ -40,21 +41,21 @@ export const CardEditor = (props: Props): React.ReactElement => {
                     <span className="label-text">Heading</span>
                 </div>
                 <input type="text" placeholder="Love you 🩷" className="input input-bordered w-full max-w-xs"
-                       onChange={(event: ChangeEvent<HTMLInputElement>) => setHeading(event.target.value)} value={cardData.heading || ''} />
+                       onChange={(event: ChangeEvent<HTMLInputElement>) => dispatch(setHeading(event.target.value))} value={card.heading || ''} />
             </label>
             <label className="form-control w-full max-w-xs">
                 <div className="label">
                     <span className="label-text">Code</span>
                 </div>
                 <input type="text" placeholder="123-456-789" className="input input-bordered w-full max-w-xs"
-                       onChange={(event: ChangeEvent<HTMLInputElement>) => setCode(event.target.value)} value={cardData.code || ''}/>
+                       onChange={(event: ChangeEvent<HTMLInputElement>) => dispatch(setCode(event.target.value))} value={card.code || ''}/>
             </label>
             <label className="form-control w-full max-w-xs">
                 <div className="label">
                     <span className="label-text">Applicable at</span>
                 </div>
                 <input type="text" placeholder="Steam" className="input input-bordered w-full max-w-xs"
-                       onChange={(event: ChangeEvent<HTMLInputElement>) => setApplicableAt(event.target.value)} value={cardData.applicableAt || ''}/>
+                       onChange={(event: ChangeEvent<HTMLInputElement>) => dispatch(setApplicableAt(event.target.value))} value={card.applicableAt || ''}/>
             </label>
 
             <button className="btn btn-primary mt-6" onClick={onSubmit}>Primary</button>

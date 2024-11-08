@@ -22,9 +22,9 @@ function App() {
           <Routes>
             <Route path="/" element={<Home/>}/>
 
-            <Route path="/editor/:id?" element={<Editor/>}/>
+            <Route path="/editor/:paramId?" element={<Editor/>}/>
 
-            <Route path="/cards/:id" element={<ShowCard />} />
+            <Route path="/cards/:paramId" element={<ShowCard />} />
 
             <Route path="/my-codes" element={<MyCards />} /> // TODO: implement my codes site
 

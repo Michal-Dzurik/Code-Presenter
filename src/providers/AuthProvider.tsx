@@ -2,7 +2,14 @@ import React, {createContext, useContext, useState, useEffect} from 'react';
 import {getAuthUser, saveAuthUser} from "../heplers";
 import {signInWithPopup, signOut, User, UserCredential} from "firebase/auth";
 import {auth, googleAuth} from "../firebase-config";
-import {AuthContextProps} from "../interfaces/AuthContextProps";
+
+export interface AuthContextProps {
+    user: User|null,
+    logIn: () => void,
+    logOut: () => void,
+    isLoggedIn: () => boolean,
+    ready: boolean
+}
 
 const AuthContext = createContext<AuthContextProps>({
     user: null,
