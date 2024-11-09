@@ -49,9 +49,7 @@ export const Editor = (): React.ReactElement => {
                         const response = await getDoc(docRef);
 
                         if (response.exists()) {
-                            const data: CardData =
-                                response.data() as CardData;
-
+                            const data: CardData = response.data() as CardData;
 
                             if (isLoggedIn() && data.uid === user?.uid) {
                                 dispatch(setCard(data));
@@ -69,7 +67,7 @@ export const Editor = (): React.ReactElement => {
         };
 
         fetchDocument();
-    }, [ready,editMode]);
+    }, [ready, editMode]);
 
     const deleteCard = async (id: string) => {
         try {

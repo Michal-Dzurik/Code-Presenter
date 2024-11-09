@@ -35,7 +35,10 @@ export const CardEditor = (props: Props): React.ReactElement => {
     };
 
     return (
-        <form className="relative w-72 rounded-xl flex flex-col items-center p-4 ml-4" onSubmit={onSubmit}>
+        <form
+            className="relative w-72 rounded-xl flex flex-col items-center p-4 ml-4"
+            onSubmit={onSubmit}
+        >
             <label className="form-control w-full max-w-xs">
                 <div className="label">
                     <span className="label-text">Heading</span>
@@ -79,7 +82,7 @@ export const CardEditor = (props: Props): React.ReactElement => {
                 />
             </label>
 
-            <button className="btn btn-primary mt-6" type='submit'>
+            <button className="btn btn-primary mt-6" type="submit">
                 Submit
             </button>
         </form>
