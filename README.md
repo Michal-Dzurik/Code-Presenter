@@ -3,10 +3,12 @@
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
 
 ## Project description
+
 This projects purpose is to deliver pleasing way to deliver any kind of code to the special one.
 You can choose from styles we prepared
 
 ## Commands you'll probably need
+
 In the project directory, you can run:
 
 ### `npm start`

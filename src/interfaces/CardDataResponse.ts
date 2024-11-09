@@ -1,5 +1,5 @@
-import {CardData} from "./CardData";
+import { CardData } from './CardData';
 
-export interface CardDataResponse extends CardData{
-    data: CardData,
+export interface CardDataResponse extends CardData {
+    data: CardData;
 }

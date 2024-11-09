@@ -1,10 +1,10 @@
-import { createSlice } from '@reduxjs/toolkit'
-import type { PayloadAction } from '@reduxjs/toolkit'
-import {CardData} from "../../../interfaces/CardData";
+import { createSlice } from '@reduxjs/toolkit';
+import type { PayloadAction } from '@reduxjs/toolkit';
+import { CardData } from '../../../interfaces/CardData';
 
 export interface CounterState {
-    card: CardData,
-    id: string
+    card: CardData;
+    id: string;
 }
 
 const initialState: CounterState = {
@@ -15,38 +15,46 @@ const initialState: CounterState = {
         type: 0,
         uid: null,
     },
-    id: ''
-}
+    id: '',
+};
 
 export const cardSlice = createSlice({
     name: 'card',
     initialState,
     reducers: {
-        setId : (state, action: PayloadAction<string>): void => {
+        setId: (state, action: PayloadAction<string>): void => {
             state.id = action.payload;
         },
-        setHeading : (state, action: PayloadAction<string>): void => {
+        setHeading: (state, action: PayloadAction<string>): void => {
             state.card.heading = action.payload;
         },
-        setCode : (state, action: PayloadAction<string>): void => {
+        setCode: (state, action: PayloadAction<string>): void => {
             state.card.code = action.payload;
         },
-        setApplicableAt : (state, action: PayloadAction<string>): void => {
+        setApplicableAt: (state, action: PayloadAction<string>): void => {
             state.card.applicableAt = action.payload;
         },
-        setType : (state, action: PayloadAction<number>): void => {
+        setType: (state, action: PayloadAction<number>): void => {
             state.card.type = action.payload;
         },
-        setUid : (state, action: PayloadAction<string>): void => {
+        setUid: (state, action: PayloadAction<string>): void => {
             state.card.uid = action.payload;
         },
-        setCard : (state, action: PayloadAction<CardData>): void => {
+        setCard: (state, action: PayloadAction<CardData>): void => {
             state.card = action.payload;
         },
     },
-})
+});
 
 // Action creators are generated for each case reducer function
-export const { setId,setHeading,setType,setUid,setCode,setApplicableAt,setCard } = cardSlice.actions
+export const {
+    setId,
+    setHeading,
+    setType,
+    setUid,
+    setCode,
+    setApplicableAt,
+    setCard,
+} = cardSlice.actions;
 
-export default cardSlice.reducer
+export default cardSlice.reducer;
