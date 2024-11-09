@@ -6,7 +6,6 @@ import { useEffect, useState } from 'react';
 import { GiftCard } from '../components/cards/GiftCard';
 import { database } from '../firebase-config';
 import { doc, getDoc } from 'firebase/firestore';
-import { CardDataResponse } from '../interfaces/CardDataResponse';
 import { CardData } from '../interfaces/CardData';
 
 interface Props {}
@@ -40,7 +39,7 @@ export const ShowCard = (props: Props): React.ReactElement => {
                 const response = await getDoc(docRef);
 
                 if (response.exists()) {
-                    setCard(response.data() as CardDataResponse);
+                    setCard(response.data() as CardData);
                 } else {
                     console.error('No such document!');
                 }

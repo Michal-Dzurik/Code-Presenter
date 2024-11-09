@@ -23,7 +23,9 @@ export const CardEditor = (props: Props): React.ReactElement => {
         return true;
     };
 
-    const onSubmit = () => {
+    const onSubmit = (e: any) => {
+        e.preventDefault();
+
         if (!isSubmitValid()) {
             alert('Form is not valid');
             return;
@@ -33,7 +35,7 @@ export const CardEditor = (props: Props): React.ReactElement => {
     };
 
     return (
-        <div className="relative w-72 rounded-xl flex flex-col items-center p-4 ml-4">
+        <form className="relative w-72 rounded-xl flex flex-col items-center p-4 ml-4" onSubmit={onSubmit}>
             <label className="form-control w-full max-w-xs">
                 <div className="label">
                     <span className="label-text">Heading</span>
@@ -77,9 +79,9 @@ export const CardEditor = (props: Props): React.ReactElement => {
                 />
             </label>
 
-            <button className="btn btn-primary mt-6" onClick={onSubmit}>
+            <button className="btn btn-primary mt-6" type='submit'>
                 Submit
             </button>
-        </div>
+        </form>
     );
 };

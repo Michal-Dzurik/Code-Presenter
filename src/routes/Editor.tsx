@@ -13,20 +13,20 @@ import {
     getDoc,
     setDoc,
 } from 'firebase/firestore';
-import { CardDataResponse } from '../interfaces/CardDataResponse';
 import { useNavigate, useParams } from 'react-router-dom';
 import { useAuth } from '../providers/AuthProvider';
 import { CardControls } from '../components/CardControls';
 import { useDispatch, useSelector } from 'react-redux';
 import { RootState } from '../store';
 import { setCard, setId, setType } from '../components/redux/features/card';
+import { CardData } from '../interfaces/CardData';
 
 export const Editor = (): React.ReactElement => {
     const navigate = useNavigate();
     const dispatch = useDispatch();
 
     const { paramId } = useParams<string>();
-    const [loaded, setLoaded] = useState<boolean>(false);
+    const [editMode, setEditMode] = useState<boolean>(false);
     const { user, isLoggedIn, ready } = useAuth();
 
     const card = useSelector((state: RootState) => state.card.card);
@@ -34,42 +34,42 @@ export const Editor = (): React.ReactElement => {
 
     useEffect(() => {
         const fetchDocument = async () => {
-            console.log(id, paramId, card, ready);
-            if (!paramId && id === '') {
-                setLoaded(true);
-                return;
-            }
-
-            dispatch(setId(paramId || id));
-            console.log(id, paramId, card, ready);
-
             if (ready) {
-                try {
-                    const docRef: any = doc(database, 'cards', id);
-                    const response = await getDoc(docRef);
+                if (paramId) {
+                    dispatch(setId(paramId));
+                    setEditMode(true);
+                } else if (id !== '') {
+                    setEditMode(true);
+                    dispatch(setId(id));
+                }
 
-                    if (response.exists()) {
-                        const data: CardDataResponse =
-                            response.data() as CardDataResponse;
+                if (editMode) {
+                    try {
+                        const docRef: any = doc(database, 'cards', id);
+                        const response = await getDoc(docRef);
 
-                        if (isLoggedIn() && data.uid === user?.uid) {
-                            dispatch(setCard(data));
-                            setLoaded(true);
-                            return;
-                        } else navigate('/404');
-                    } else {
-                        console.error('No such document!');
+                        if (response.exists()) {
+                            const data: CardData =
+                                response.data() as CardData;
+
+
+                            if (isLoggedIn() && data.uid === user?.uid) {
+                                dispatch(setCard(data));
+                            } else navigate('/404');
+                        } else {
+                            console.error('No such document!');
+                            navigate('/404');
+                        }
+                    } catch (error) {
+                        console.error('Error fetching document: ' + id);
                         navigate('/404');
                     }
-                } catch (error) {
-                    console.error('Error fetching document: ' + id);
-                    navigate('/404');
                 }
             }
         };
 
         fetchDocument();
-    }, [ready]);
+    }, [ready,editMode]);
 
     const deleteCard = async (id: string) => {
         try {
@@ -103,7 +103,7 @@ export const Editor = (): React.ReactElement => {
     const optionTitle = (str: string) => startCase(str);
 
     const saveCard = async () => {
-        if (!id) {
+        if (!editMode) {
             const documentReference = await addDoc(
                 collection(database, 'cards'),
                 {
@@ -112,6 +112,7 @@ export const Editor = (): React.ReactElement => {
                 }
             );
             dispatch(setId(documentReference.id));
+            setEditMode(true);
 
             return;
         }
@@ -131,13 +132,9 @@ export const Editor = (): React.ReactElement => {
         return card.type !== 0;
     };
 
-    const isLoaded = () => {
-        return id || loaded;
-    };
-
     return (
         <>
-            {isLoaded() ? (
+            {ready ? (
                 <div className="flex justify-center items-center h-screen w-screen flex-col">
                     <div className="flex justify-center items-center content-center flex-row mb-8">
                         <select
@@ -162,11 +159,11 @@ export const Editor = (): React.ReactElement => {
                                 )
                             )}
                         </select>
-                        {id ? (
+                        {editMode ? (
                             <CardControls
                                 onDelete={(id: string) => deleteCard(id)}
                                 editorVersion={true}
-                                cardId={card.id}
+                                cardId={id}
                             />
                         ) : (
                             ''

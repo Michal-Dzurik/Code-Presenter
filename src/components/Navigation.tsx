@@ -33,6 +33,9 @@ export const Navigation = (): React.ReactElement => {
                         className="menu menu-sm dropdown-content bg-base-100 rounded-box z-[1] mt-3 w-52 p-2 shadow"
                     >
                         <li>
+                            <Link to={'editor/'}>Editor</Link>
+                        </li>
+                        <li>
                             <Link to={'my-codes/'}>My codes</Link>
                         </li>
                         <li>
@@ -42,7 +45,7 @@ export const Navigation = (): React.ReactElement => {
                 </div>
             ) : (
                 <div className="navbar-center lg:flex">
-                    <ul className="menu menu-horizontal px-1">
+                <ul className="menu menu-horizontal px-1">
                         <li>
                             <button
                                 onClick={logIn}
