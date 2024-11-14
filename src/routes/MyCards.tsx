@@ -1,9 +1,9 @@
 import * as React from 'react';
 import '../index.css';
 import { useNavigate } from 'react-router-dom';
-import { useEffect, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import { CardData } from '../interfaces/CardData';
-import { GiftCard } from '../components/cards/GiftCard';
+import { Card } from '../components/Card';
 import { database } from '../firebase-config';
 import {
     collection,
@@ -22,6 +22,7 @@ export const MyCards = (props: Props): React.ReactElement => {
     const navigate = useNavigate();
 
     const [cardsData, setCardsData] = useState<CardData[]>([]);
+    const [cardsFetched, setCardsFetched] = useState<boolean>(false);
     const { user, isLoggedIn, ready } = useAuth();
 
     useEffect(() => {
@@ -47,15 +48,17 @@ export const MyCards = (props: Props): React.ReactElement => {
                 );
 
                 setCardsData(cardsList);
+                setCardsFetched(true);
             } catch (error) {
                 console.error('Error fetching document: ' + error);
+                setCardsFetched(true);
             }
         };
 
         if (ready) fetchDocument();
     }, [ready]);
 
-    const deleteCard = async (id: string) => {
+    const deleteCard = useCallback(async (id: string) => {
         try {
             const docRef = doc(database, 'cards', id);
             await deleteDoc(docRef);
@@ -65,7 +68,7 @@ export const MyCards = (props: Props): React.ReactElement => {
         } catch (error) {
             console.error('Error deleting card: ' + id);
         }
-    };
+    }, []);
 
     return (
         <div className="flex justify-center items-center m-auto h-screen max-w-[600px] flex-col">
@@ -75,16 +78,22 @@ export const MyCards = (props: Props): React.ReactElement => {
                         My codes
                     </h3>
                 </div>
-                {cardsData.map((card: CardData, index: number) => (
-                    <div className="mb-4 mx-2" key={card.id}>
-                        <GiftCard
-                            card={card}
-                            onDelete={deleteCard}
-                            controlsOff={true}
-                            smallVersion={true}
-                        />
-                    </div>
-                ))}
+                {cardsFetched && cardsData.length !== 0 ? (
+                    cardsData.map((card: CardData, index: number) => (
+                        <div className="mb-4 mx-2" key={card.id}>
+                            <Card
+                                card={card}
+                                onDelete={deleteCard}
+                                controlsOff={true}
+                                smallVersion={true}
+                            />
+                        </div>
+                    ))
+                ) : cardsFetched ? (
+                    <p>Nothing :\</p>
+                ) : (
+                    <span className="loading loading-spinner loading-lg"></span>
+                )}
             </div>
         </div>
     );

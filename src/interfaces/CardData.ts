@@ -4,5 +4,6 @@ export interface CardData {
     applicableAt: string;
     code: string;
     type: number;
+    discount?: string;
     uid: string | null;
 }

@@ -40,6 +40,9 @@ export const cardSlice = createSlice({
         setUid: (state, action: PayloadAction<string>): void => {
             state.card.uid = action.payload;
         },
+        setDiscount: (state, action: PayloadAction<string>): void => {
+            state.card.discount = action.payload;
+        },
         setCard: (state, action: PayloadAction<CardData>): void => {
             state.card = action.payload;
         },
@@ -54,6 +57,7 @@ export const {
     setUid,
     setCode,
     setApplicableAt,
+    setDiscount,
     setCard,
 } = cardSlice.actions;
 

@@ -1,8 +1,7 @@
 import * as React from 'react';
 import '../index.css';
-import { GiftCard } from '../components/cards/GiftCard';
-import { ChangeEvent, useEffect, useState } from 'react';
-import { startCase } from 'lodash';
+import { Card } from '../components/Card';
+import { ChangeEvent, useCallback, useEffect, useState } from 'react';
 import { CardEditor } from '../components/CardEditor';
 import { database } from '../firebase-config';
 import {
@@ -18,8 +17,9 @@ import { useAuth } from '../providers/AuthProvider';
 import { CardControls } from '../components/CardControls';
 import { useDispatch, useSelector } from 'react-redux';
 import { RootState } from '../store';
-import { setCard, setId, setType } from '../components/redux/features/card';
+import { setCard, setType } from '../components/redux/features/card';
 import { CardData } from '../interfaces/CardData';
+import { cardTypeMap } from '../constants/CardTypes';
 
 export const Editor = (): React.ReactElement => {
     const navigate = useNavigate();
@@ -30,51 +30,58 @@ export const Editor = (): React.ReactElement => {
     const { user, isLoggedIn, ready } = useAuth();
 
     const card = useSelector((state: RootState) => state.card.card);
-    const id = useSelector((state: RootState) => state.card.id);
+    const [id, setId] = useState<string>(paramId || '');
+
+    const fetchDocument = async () => {
+        try {
+            const docRef: any = doc(database, 'cards', id);
+            const response = await getDoc(docRef);
+
+            if (response.exists()) {
+                const data: CardData = response.data() as CardData;
+
+                if (isLoggedIn() && data.uid === user?.uid) {
+                    dispatch(setCard(data));
+                } else navigate('/404');
+            } else {
+                console.error('No such document!');
+                navigate('/404');
+            }
+        } catch (error) {
+            console.error('Error fetching document: ' + id);
+            navigate('/404');
+        }
+    };
 
     useEffect(() => {
-        const fetchDocument = async () => {
-            if (ready) {
-                if (paramId) {
-                    dispatch(setId(paramId));
-                    setEditMode(true);
-                } else if (id !== '') {
-                    setEditMode(true);
-                    dispatch(setId(id));
-                }
-
-                if (editMode) {
-                    try {
-                        const docRef: any = doc(database, 'cards', id);
-                        const response = await getDoc(docRef);
-
-                        if (response.exists()) {
-                            const data: CardData = response.data() as CardData;
-
-                            if (isLoggedIn() && data.uid === user?.uid) {
-                                dispatch(setCard(data));
-                            } else navigate('/404');
-                        } else {
-                            console.error('No such document!');
-                            navigate('/404');
-                        }
-                    } catch (error) {
-                        console.error('Error fetching document: ' + id);
-                        navigate('/404');
-                    }
-                }
+        if (ready) {
+            if (id === '') {
+                setEditMode(false);
+                dispatch(
+                    setCard({
+                        heading: '',
+                        code: '',
+                        applicableAt: '',
+                        type: 0,
+                        uid: null,
+                    })
+                );
+            } else {
+                setEditMode(true);
             }
-        };
 
-        fetchDocument();
-    }, [ready, editMode]);
+            if (editMode && paramId) {
+                fetchDocument();
+            }
+        }
+    }, [ready, editMode, id]);
 
-    const deleteCard = async (id: string) => {
+    const deleteCard = useCallback(async (id: string) => {
         try {
             const docRef = doc(database, 'cards', id);
             await deleteDoc(docRef);
 
-            dispatch(setId(''));
+            setId('');
             dispatch(
                 setCard({
                     heading: '',
@@ -87,18 +94,7 @@ export const Editor = (): React.ReactElement => {
         } catch (error) {
             console.error('Error deleting card: ' + id);
         }
-    };
-
-    const cardTypes = {
-        1: (
-            <GiftCard
-                card={{ ...card, id }}
-                onDelete={(id: string) => deleteCard(id)}
-            />
-        ),
-    };
-
-    const optionTitle = (str: string) => startCase(str);
+    }, []);
 
     const saveCard = async () => {
         if (!editMode) {
@@ -109,7 +105,7 @@ export const Editor = (): React.ReactElement => {
                     uid: user?.uid,
                 }
             );
-            dispatch(setId(documentReference.id));
+            setId(documentReference.id);
             setEditMode(true);
 
             return;
@@ -123,7 +119,7 @@ export const Editor = (): React.ReactElement => {
             }
         );
 
-        dispatch(setId(id || ''));
+        setId(id || '');
     };
 
     const wasCardTypeChosen = () => {
@@ -149,17 +145,17 @@ export const Editor = (): React.ReactElement => {
                             <option value="0" disabled>
                                 What type of code are you sharing
                             </option>
-                            {Object.entries(cardTypes).map(
-                                ([key, Component]) => (
-                                    <option key={key} value={key}>
-                                        {optionTitle(Component.type.name)}
+                            {Array.from(cardTypeMap.entries()).map(
+                                ([value, label]) => (
+                                    <option key={value} value={value}>
+                                        {label}
                                     </option>
                                 )
                             )}
                         </select>
                         {editMode ? (
                             <CardControls
-                                onDelete={(id: string) => deleteCard(id)}
+                                onDelete={deleteCard}
                                 editorVersion={true}
                                 cardId={id}
                             />
@@ -170,9 +166,9 @@ export const Editor = (): React.ReactElement => {
                     <div className="flex justify-center items-center flex-row">
                         {wasCardTypeChosen() ? (
                             <>
-                                <GiftCard
+                                <Card
                                     card={{ ...card, id }}
-                                    onDelete={(id: string) => deleteCard(id)}
+                                    onDelete={deleteCard}
                                 />
                                 <CardEditor saveCard={saveCard} />
                             </>

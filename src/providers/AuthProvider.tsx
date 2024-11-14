@@ -1,4 +1,9 @@
-import React, { createContext, useContext, useState, useEffect } from 'react';
+import React, {
+    createContext,
+    useContext,
+    useState,
+    useLayoutEffect,
+} from 'react';
 import { getAuthUser, saveAuthUser } from '../heplers';
 import { signInWithPopup, signOut, User, UserCredential } from 'firebase/auth';
 import { auth, googleAuth } from '../firebase-config';
@@ -25,7 +30,7 @@ export const AuthProvider = ({ children }: { children: any }) => {
     const [user, setUser] = useState<User | null>(null);
     const [ready, setReady] = useState(false);
 
-    useEffect(() => {
+    useLayoutEffect(() => {
         const auth = getAuthUser();
 
         if (auth) setUser(auth);

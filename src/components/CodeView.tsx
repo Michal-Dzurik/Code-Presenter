@@ -3,10 +3,11 @@ import '../index.css';
 
 interface Props {
     code: string;
+    className?: string;
 }
 
 export const CodeView = (props: Props): React.ReactElement => {
-    const { code } = props;
+    const { code, className } = props;
 
     const onClick = (event: any) => {
         let text = event.target.innerText;
@@ -22,7 +23,10 @@ export const CodeView = (props: Props): React.ReactElement => {
     return (
         <div
             onClick={onClick}
-            className="text-center mt-4 mb-8 cursor-pointer bg-gray-200 text-gray-800 p-2 rounded-md mt-2 font-mono text-lg tracking-widest transition-colors duration-200 hover:bg-gray-300"
+            className={
+                className +
+                ' text-center mt-4 mb-8 cursor-pointer p-2 rounded-md mt-2 font-mono text-lg tracking-widest transition-colors duration-200'
+            }
         >
             {code || '123-456-789'}
         </div>

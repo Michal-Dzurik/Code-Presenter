@@ -3,7 +3,7 @@ import '../index.css';
 import { Confetti } from '../components/Confetti';
 import { useNavigate, useParams } from 'react-router-dom';
 import { useEffect, useState } from 'react';
-import { GiftCard } from '../components/cards/GiftCard';
+import { Card } from '../components/Card';
 import { database } from '../firebase-config';
 import { doc, getDoc } from 'firebase/firestore';
 import { CardData } from '../interfaces/CardData';
@@ -13,6 +13,8 @@ interface Props {}
 export const ShowCard = (props: Props): React.ReactElement => {
     const { paramId } = useParams<string>();
     const navigate = useNavigate();
+
+    const [cardFetched, setCardFetched] = useState<boolean>(false);
     const [card, setCard] = useState<CardData>({
         heading: '',
         code: '',
@@ -40,6 +42,7 @@ export const ShowCard = (props: Props): React.ReactElement => {
 
                 if (response.exists()) {
                     setCard(response.data() as CardData);
+                    setCardFetched(true);
                 } else {
                     console.error('No such document!');
                 }
@@ -55,10 +58,10 @@ export const ShowCard = (props: Props): React.ReactElement => {
         <>
             <Confetti />
             <div className="flex justify-center items-center h-screen w-screen">
-                {card ? (
-                    <GiftCard card={card} onDelete={(id: string) => {}} />
+                {cardFetched ? (
+                    <Card card={card} onDelete={() => {}} />
                 ) : (
-                    ''
+                    <span className="loading loading-spinner loading-lg"></span>
                 )}
             </div>
         </>

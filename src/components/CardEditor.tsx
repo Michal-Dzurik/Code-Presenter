@@ -3,7 +3,12 @@ import '../index.css';
 import { ChangeEvent } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { RootState } from '../store';
-import { setApplicableAt, setCode, setHeading } from './redux/features/card';
+import {
+    setApplicableAt,
+    setCode,
+    setDiscount,
+    setHeading,
+} from './redux/features/card';
 
 interface Props {
     saveCard: () => void;
@@ -17,6 +22,7 @@ export const CardEditor = (props: Props): React.ReactElement => {
 
     const isSubmitValid = () => {
         if (!card.heading || card.heading.trim() === '') return false;
+        if (!card.discount || card.discount.trim() === '') return false;
         if (!card.code || card.code.trim() === '') return false;
         if (!card.applicableAt || card.applicableAt.trim() === '') return false;
 
@@ -45,7 +51,7 @@ export const CardEditor = (props: Props): React.ReactElement => {
                 </div>
                 <input
                     type="text"
-                    placeholder="Love you 🩷"
+                    placeholder="Love you"
                     className="input input-bordered w-full max-w-xs"
                     onChange={(event: ChangeEvent<HTMLInputElement>) =>
                         dispatch(setHeading(event.target.value))
@@ -79,6 +85,21 @@ export const CardEditor = (props: Props): React.ReactElement => {
                         dispatch(setApplicableAt(event.target.value))
                     }
                     value={card.applicableAt || ''}
+                />
+            </label>
+
+            <label className="form-control w-full max-w-xs">
+                <div className="label">
+                    <span className="label-text">Discount</span>
+                </div>
+                <input
+                    type="text"
+                    placeholder="-10%"
+                    className="input input-bordered w-full max-w-xs"
+                    onChange={(event: ChangeEvent<HTMLInputElement>) =>
+                        dispatch(setDiscount(event.target.value))
+                    }
+                    value={card.discount || ''}
                 />
             </label>
 
