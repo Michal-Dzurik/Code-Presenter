@@ -58,17 +58,20 @@ export const MyCards = (props: Props): React.ReactElement => {
         if (ready) fetchDocument();
     }, [ready]);
 
-    const deleteCard = useCallback(async (id: string) => {
-        try {
-            const docRef = doc(database, 'cards', id);
-            await deleteDoc(docRef);
+    const deleteCard = useCallback(
+        async (id: string) => {
+            try {
+                const docRef = doc(database, 'cards', id);
+                await deleteDoc(docRef);
 
-            setCardsData(cardsData.filter((d) => d.id !== id));
-            navigate('/my-codes');
-        } catch (error) {
-            console.error('Error deleting card: ' + id);
-        }
-    }, []);
+                setCardsData(cardsData.filter((d) => d.id !== id));
+                navigate('/my-codes');
+            } catch (error) {
+                console.error('Error deleting card: ' + id);
+            }
+        },
+        [cardsData]
+    );
 
     return (
         <div className="flex justify-center items-center m-auto h-screen max-w-[600px] flex-col">

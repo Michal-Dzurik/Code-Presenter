@@ -12,7 +12,7 @@ import {
     getDoc,
     setDoc,
 } from 'firebase/firestore';
-import { useNavigate, useParams } from 'react-router-dom';
+import { useLocation, useNavigate, useParams } from 'react-router-dom';
 import { useAuth } from '../providers/AuthProvider';
 import { CardControls } from '../components/CardControls';
 import { useDispatch, useSelector } from 'react-redux';
@@ -24,6 +24,7 @@ import { cardTypeMap } from '../constants/CardTypes';
 export const Editor = (): React.ReactElement => {
     const navigate = useNavigate();
     const dispatch = useDispatch();
+    const location = useLocation();
 
     const { paramId } = useParams<string>();
     const [editMode, setEditMode] = useState<boolean>(false);
@@ -44,11 +45,9 @@ export const Editor = (): React.ReactElement => {
                     dispatch(setCard(data));
                 } else navigate('/404');
             } else {
-                console.error('No such document!');
                 navigate('/404');
             }
         } catch (error) {
-            console.error('Error fetching document: ' + id);
             navigate('/404');
         }
     };
@@ -76,24 +75,21 @@ export const Editor = (): React.ReactElement => {
         }
     }, [ready, editMode, id]);
 
+    useEffect(() => {
+        if (location.pathname === '/editor/') {
+            setId('');
+            setEditMode(false);
+        }
+    }, [location]);
+
     const deleteCard = useCallback(async (id: string) => {
         try {
             const docRef = doc(database, 'cards', id);
             await deleteDoc(docRef);
 
             setId('');
-            dispatch(
-                setCard({
-                    heading: '',
-                    code: '',
-                    applicableAt: '',
-                    type: 0,
-                    uid: null,
-                })
-            );
-        } catch (error) {
-            console.error('Error deleting card: ' + id);
-        }
+            setEditMode(false);
+        } catch (error) {}
     }, []);
 
     const saveCard = async () => {

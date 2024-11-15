@@ -7,6 +7,7 @@ import React, {
 import { getAuthUser, saveAuthUser } from '../heplers';
 import { signInWithPopup, signOut, User, UserCredential } from 'firebase/auth';
 import { auth, googleAuth } from '../firebase-config';
+import { useNavigate } from 'react-router-dom';
 
 export interface AuthContextProps {
     user: User | null;
@@ -29,6 +30,7 @@ const AuthContext = createContext<AuthContextProps>({
 export const AuthProvider = ({ children }: { children: any }) => {
     const [user, setUser] = useState<User | null>(null);
     const [ready, setReady] = useState(false);
+    const navigate = useNavigate();
 
     useLayoutEffect(() => {
         const auth = getAuthUser();
@@ -58,6 +60,7 @@ export const AuthProvider = ({ children }: { children: any }) => {
             await signOut(auth).then(() => {
                 saveAuthUser(null);
                 setUser(null);
+                navigate('/');
             });
         } catch (error) {
             console.error(error);
