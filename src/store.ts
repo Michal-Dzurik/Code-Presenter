@@ -1,6 +1,6 @@
 // @ts-ignore
 import { configureStore } from '@reduxjs/toolkit';
-import card from './components/redux/features/card';
+import card from './redux/features/card';
 
 export const store = configureStore({
     reducer: {

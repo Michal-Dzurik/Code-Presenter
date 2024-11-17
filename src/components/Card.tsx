@@ -9,16 +9,16 @@ import { DiscountCard } from './cards/DiscountCard';
 interface Props {
     controlsOff?: boolean;
     smallVersion?: boolean;
-    onDelete: (id: string) => void;
+    handleDelete: (id: string) => void;
     card: CardData;
 }
 
 export const Card = (props: Props): React.ReactElement => {
-    const { smallVersion, controlsOff, onDelete, card } = props;
-    const { isLoggedIn, ready } = useAuth();
+    const { smallVersion, controlsOff, handleDelete, card } = props;
+    const { isLoggedIn } = useAuth();
 
     const hasControls = (): boolean => {
-        return (ready && isLoggedIn() && card.id && controlsOff) as boolean;
+        return (isLoggedIn() && card.id && controlsOff) as boolean;
     };
 
     const renderCardType = () => {
@@ -28,7 +28,7 @@ export const Card = (props: Props): React.ReactElement => {
                     <HangingDiscountCard
                         smallVersion={smallVersion}
                         useControls={hasControls()}
-                        onDelete={onDelete}
+                        handleDelete={handleDelete}
                         card={card}
                     />
                 );
@@ -37,7 +37,7 @@ export const Card = (props: Props): React.ReactElement => {
                     <DiscountCard
                         smallVersion={smallVersion}
                         useControls={hasControls()}
-                        onDelete={onDelete}
+                        handleDelete={handleDelete}
                         card={card}
                     />
                 );

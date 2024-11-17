@@ -1,6 +1,6 @@
 import { createSlice } from '@reduxjs/toolkit';
 import type { PayloadAction } from '@reduxjs/toolkit';
-import { CardData } from '../../../interfaces/CardData';
+import { CardData } from '../../interfaces/CardData';
 
 export interface CounterState {
     card: CardData;

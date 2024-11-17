@@ -14,7 +14,6 @@ export interface AuthContextProps {
     logIn: () => void;
     logOut: () => void;
     isLoggedIn: () => boolean;
-    ready: boolean;
 }
 
 const AuthContext = createContext<AuthContextProps>({
@@ -24,7 +23,6 @@ const AuthContext = createContext<AuthContextProps>({
     isLoggedIn: () => {
         return false;
     },
-    ready: false,
 });
 
 export const AuthProvider = ({ children }: { children: any }) => {
@@ -73,11 +71,13 @@ export const AuthProvider = ({ children }: { children: any }) => {
 
     return (
         <AuthContext.Provider
-            value={
-                { user, logIn, logOut, isLoggedIn, ready } as AuthContextProps
-            }
+            value={{ user, logIn, logOut, isLoggedIn } as AuthContextProps}
         >
-            {children}
+            {ready ? (
+                children
+            ) : (
+                <span className="loading loading-spinner loading-lg"></span>
+            )}
         </AuthContext.Provider>
     );
 };

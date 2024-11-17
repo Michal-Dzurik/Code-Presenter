@@ -23,7 +23,7 @@ export const MyCards = (props: Props): React.ReactElement => {
 
     const [cardsData, setCardsData] = useState<CardData[]>([]);
     const [cardsFetched, setCardsFetched] = useState<boolean>(false);
-    const { user, isLoggedIn, ready } = useAuth();
+    const { user, isLoggedIn } = useAuth();
 
     useEffect(() => {
         const fetchDocument = async () => {
@@ -55,8 +55,8 @@ export const MyCards = (props: Props): React.ReactElement => {
             }
         };
 
-        if (ready) fetchDocument();
-    }, [ready]);
+        fetchDocument();
+    }, []);
 
     const deleteCard = useCallback(
         async (id: string) => {
@@ -70,7 +70,7 @@ export const MyCards = (props: Props): React.ReactElement => {
                 console.error('Error deleting card: ' + id);
             }
         },
-        [cardsData]
+        [cardsData, database, cardsData]
     );
 
     return (
@@ -86,7 +86,7 @@ export const MyCards = (props: Props): React.ReactElement => {
                         <div className="mb-4 mx-2" key={card.id}>
                             <Card
                                 card={card}
-                                onDelete={deleteCard}
+                                handleDelete={deleteCard}
                                 controlsOff={true}
                                 smallVersion={true}
                             />

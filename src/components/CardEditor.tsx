@@ -1,6 +1,6 @@
 import * as React from 'react';
 import '../index.css';
-import { ChangeEvent } from 'react';
+import { useCallback } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { RootState } from '../store';
 import {
@@ -8,7 +8,8 @@ import {
     setCode,
     setDiscount,
     setHeading,
-} from './redux/features/card';
+} from '../redux/features/card';
+import { TextInput } from './form/TextInput';
 
 interface Props {
     saveCard: () => void;
@@ -29,7 +30,7 @@ export const CardEditor = (props: Props): React.ReactElement => {
         return true;
     };
 
-    const onSubmit = (e: any) => {
+    const handleSubmit = (e: any) => {
         e.preventDefault();
 
         if (!isSubmitValid()) {
@@ -40,68 +41,70 @@ export const CardEditor = (props: Props): React.ReactElement => {
         saveCard();
     };
 
+    const handleHeadingChange = useCallback(
+        (val: string) => {
+            dispatch(setHeading(val));
+        },
+        [dispatch]
+    );
+
+    const handleCodeChange = useCallback(
+        (val: string) => {
+            dispatch(setCode(val));
+        },
+        [dispatch]
+    );
+
+    const handleApplicableAtChange = useCallback(
+        (val: string) => {
+            dispatch(setApplicableAt(val));
+        },
+        [dispatch]
+    );
+
+    const handleDiscountChange = useCallback(
+        (val: string) => {
+            dispatch(setDiscount(val));
+        },
+        [dispatch]
+    );
+
     return (
         <form
             className="relative w-72 rounded-xl flex flex-col items-center p-4 ml-4"
-            onSubmit={onSubmit}
+            onSubmit={handleSubmit}
         >
-            <label className="form-control w-full max-w-xs">
-                <div className="label">
-                    <span className="label-text">Heading</span>
-                </div>
-                <input
-                    type="text"
-                    placeholder="Love you"
-                    className="input input-bordered w-full max-w-xs"
-                    onChange={(event: ChangeEvent<HTMLInputElement>) =>
-                        dispatch(setHeading(event.target.value))
-                    }
-                    value={card.heading || ''}
-                />
-            </label>
-            <label className="form-control w-full max-w-xs">
-                <div className="label">
-                    <span className="label-text">Code</span>
-                </div>
-                <input
-                    type="text"
-                    placeholder="123-456-789"
-                    className="input input-bordered w-full max-w-xs"
-                    onChange={(event: ChangeEvent<HTMLInputElement>) =>
-                        dispatch(setCode(event.target.value))
-                    }
-                    value={card.code || ''}
-                />
-            </label>
-            <label className="form-control w-full max-w-xs">
-                <div className="label">
-                    <span className="label-text">Applicable at</span>
-                </div>
-                <input
-                    type="text"
-                    placeholder="Steam"
-                    className="input input-bordered w-full max-w-xs"
-                    onChange={(event: ChangeEvent<HTMLInputElement>) =>
-                        dispatch(setApplicableAt(event.target.value))
-                    }
-                    value={card.applicableAt || ''}
-                />
-            </label>
+            <TextInput
+                label="Heading"
+                value={card.heading || ''}
+                handleChange={handleHeadingChange}
+                placeholder="Love you"
+                maxLength={150}
+            />
 
-            <label className="form-control w-full max-w-xs">
-                <div className="label">
-                    <span className="label-text">Discount</span>
-                </div>
-                <input
-                    type="text"
-                    placeholder="-10%"
-                    className="input input-bordered w-full max-w-xs"
-                    onChange={(event: ChangeEvent<HTMLInputElement>) =>
-                        dispatch(setDiscount(event.target.value))
-                    }
-                    value={card.discount || ''}
-                />
-            </label>
+            <TextInput
+                label="Code"
+                value={card.code || ''}
+                handleChange={handleCodeChange}
+                placeholder="123-456-789"
+                maxLength={20}
+            />
+
+            <TextInput
+                label="Applicable at"
+                value={card.applicableAt || ''}
+                handleChange={handleApplicableAtChange}
+                placeholder="Steam"
+                maxLength={20}
+            />
+
+            <TextInput
+                label="Discount"
+                value={card.discount || ''}
+                handleChange={handleDiscountChange}
+                placeholder="-10%"
+                maxLength={6}
+            />
 
             <button className="btn btn-primary mt-6" type="submit">
                 Submit

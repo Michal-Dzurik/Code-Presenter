@@ -56,10 +56,10 @@ export const ShowCard = (props: Props): React.ReactElement => {
 
     return (
         <>
-            <Confetti />
+            {cardFetched ? <Confetti /> : ''}
             <div className="flex justify-center items-center h-screen w-screen">
                 {cardFetched ? (
-                    <Card card={card} onDelete={() => {}} />
+                    <Card card={card} handleDelete={() => {}} />
                 ) : (
                     <span className="loading loading-spinner loading-lg"></span>
                 )}

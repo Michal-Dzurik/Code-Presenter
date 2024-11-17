@@ -5,15 +5,15 @@ import { Link } from 'react-router-dom';
 interface Props {
     cardId?: string;
     editorVersion?: boolean;
-    onDelete: (id: string) => void;
+    handleDelete: (id: string) => void;
 }
 
 export const CardControls = (props: Props): React.ReactElement => {
-    const { editorVersion, onDelete, cardId } = props;
+    const { editorVersion, handleDelete, cardId } = props;
 
     const beforeDelete = (cardId: string) => {
         if (window.confirm('Are you sure you want to delete this card?'))
-            onDelete(cardId);
+            handleDelete(cardId);
     };
 
     return (

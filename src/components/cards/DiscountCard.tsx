@@ -8,12 +8,13 @@ interface Props {
     controlsOff?: boolean;
     smallVersion?: boolean;
     useControls: boolean;
-    onDelete: (id: string) => void;
+    handleDelete: (id: string) => void;
     card: CardData;
 }
 
 export const DiscountCard = (props: Props): React.ReactElement => {
-    const { smallVersion, controlsOff, onDelete, card, useControls } = props;
+    const { smallVersion, controlsOff, handleDelete, card, useControls } =
+        props;
 
     return (
         <>
@@ -30,7 +31,7 @@ export const DiscountCard = (props: Props): React.ReactElement => {
                     <div className="mb-4">
                         {!controlsOff ? (
                             <CardControls
-                                onDelete={onDelete}
+                                handleDelete={handleDelete}
                                 cardId={card.id}
                                 editorVersion={!smallVersion}
                             ></CardControls>
@@ -68,7 +69,7 @@ export const DiscountCard = (props: Props): React.ReactElement => {
                     {useControls ? (
                         <CardControls
                             editorVersion={true}
-                            onDelete={onDelete}
+                            handleDelete={handleDelete}
                             cardId={card.id}
                         />
                     ) : (

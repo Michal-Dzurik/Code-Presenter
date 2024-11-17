@@ -8,12 +8,12 @@ interface Props {
     controlsOff?: boolean;
     smallVersion?: boolean;
     useControls: boolean;
-    onDelete: (id: string) => void;
+    handleDelete: (id: string) => void;
     card: CardData;
 }
 
 export const HangingDiscountCard = (props: Props): React.ReactElement => {
-    const { smallVersion, controlsOff, onDelete, card, useControls } = props;
+    const { smallVersion, controlsOff, handleDelete, card, useControls } = props;
 
     return (
         <>
@@ -32,7 +32,7 @@ export const HangingDiscountCard = (props: Props): React.ReactElement => {
                         <p className="mt-2 text-xs text-slate-500 text-center absolute bottom-6 left-1/2 transform -translate-x-1/2 w-3/4">
                             {!controlsOff ? (
                                 <CardControls
-                                    onDelete={onDelete}
+                                    handleDelete={handleDelete}
                                     cardId={card.id}
                                     editorVersion={!smallVersion}
                                 ></CardControls>
@@ -69,7 +69,7 @@ export const HangingDiscountCard = (props: Props): React.ReactElement => {
                     {useControls ? (
                         <CardControls
                             editorVersion={true}
-                            onDelete={onDelete}
+                            handleDelete={handleDelete}
                             cardId={card.id}
                         />
                     ) : (
