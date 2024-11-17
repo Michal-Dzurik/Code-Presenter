@@ -21,6 +21,7 @@ import { setCard, setType } from '../redux/features/card';
 import { CardData } from '../interfaces/CardData';
 import { cardTypeMap } from '../constants/CardTypes';
 import { Select } from '../components/form/Select';
+import { AuthOnly } from '../components/protection/AuthOnly';
 
 export const Editor = (): React.ReactElement => {
     const navigate = useNavigate();
@@ -29,7 +30,7 @@ export const Editor = (): React.ReactElement => {
 
     const { paramId } = useParams<string>();
     const [editMode, setEditMode] = useState<boolean>(false);
-    const { user, isLoggedIn } = useAuth();
+    const { user } = useAuth();
 
     const card = useSelector((state: RootState) => state.card.card);
     const [id, setId] = useState<string>(paramId || '');
@@ -42,7 +43,7 @@ export const Editor = (): React.ReactElement => {
             if (response.exists()) {
                 const data: CardData = response.data() as CardData;
 
-                if (isLoggedIn() && data.uid === user?.uid) {
+                if (data.uid === user?.uid) {
                     dispatch(setCard(data));
                 } else navigate('/404');
             } else {
@@ -129,7 +130,7 @@ export const Editor = (): React.ReactElement => {
     };
 
     return (
-        <>
+        <AuthOnly>
             <div className="flex justify-center items-center h-screen w-screen flex-col">
                 <div className="flex justify-center items-center content-center flex-row mb-8">
                     <Select
@@ -164,6 +165,6 @@ export const Editor = (): React.ReactElement => {
                     )}
                 </div>
             </div>
-        </>
+        </AuthOnly>
     );
 };

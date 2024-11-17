@@ -15,6 +15,7 @@ import {
     where,
 } from 'firebase/firestore';
 import { useAuth } from '../providers/AuthProvider';
+import { AuthOnly } from '../components/protection/AuthOnly';
 
 interface Props {}
 
@@ -23,11 +24,10 @@ export const MyCards = (props: Props): React.ReactElement => {
 
     const [cardsData, setCardsData] = useState<CardData[]>([]);
     const [cardsFetched, setCardsFetched] = useState<boolean>(false);
-    const { user, isLoggedIn } = useAuth();
+    const { user } = useAuth();
 
     useEffect(() => {
         const fetchDocument = async () => {
-            if (!isLoggedIn()) navigate('/login');
             try {
                 const cards = query(
                     collection(database, 'cards'),
@@ -74,30 +74,32 @@ export const MyCards = (props: Props): React.ReactElement => {
     );
 
     return (
-        <div className="flex justify-center items-center m-auto h-screen max-w-[600px] flex-col">
-            <div className=" w-full flex justify-center items-center flex-row flex-wrap">
-                <div className="w-full my-6">
-                    <h3 className="text-center text-2xl text-white">
-                        My codes
-                    </h3>
+        <AuthOnly>
+            <div className="flex justify-center items-center m-auto h-screen max-w-[600px] flex-col">
+                <div className=" w-full flex justify-center items-center flex-row flex-wrap">
+                    <div className="w-full my-6">
+                        <h3 className="text-center text-2xl text-white">
+                            My codes
+                        </h3>
+                    </div>
+                    {cardsFetched && cardsData.length !== 0 ? (
+                        cardsData.map((card: CardData) => (
+                            <div className="mb-4 mx-2" key={card.id}>
+                                <Card
+                                    card={card}
+                                    handleDelete={deleteCard}
+                                    controlsOff={true}
+                                    smallVersion={true}
+                                />
+                            </div>
+                        ))
+                    ) : cardsFetched ? (
+                        <p>Nothing :\</p>
+                    ) : (
+                        <span className="loading loading-spinner loading-lg"></span>
+                    )}
                 </div>
-                {cardsFetched && cardsData.length !== 0 ? (
-                    cardsData.map((card: CardData, index: number) => (
-                        <div className="mb-4 mx-2" key={card.id}>
-                            <Card
-                                card={card}
-                                handleDelete={deleteCard}
-                                controlsOff={true}
-                                smallVersion={true}
-                            />
-                        </div>
-                    ))
-                ) : cardsFetched ? (
-                    <p>Nothing :\</p>
-                ) : (
-                    <span className="loading loading-spinner loading-lg"></span>
-                )}
             </div>
-        </div>
+        </AuthOnly>
     );
 };
