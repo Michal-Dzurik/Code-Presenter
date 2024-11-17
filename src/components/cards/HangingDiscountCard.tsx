@@ -13,7 +13,8 @@ interface Props {
 }
 
 export const HangingDiscountCard = (props: Props): React.ReactElement => {
-    const { smallVersion, controlsOff, handleDelete, card, useControls } = props;
+    const { smallVersion, controlsOff, handleDelete, card, useControls } =
+        props;
 
     return (
         <>
