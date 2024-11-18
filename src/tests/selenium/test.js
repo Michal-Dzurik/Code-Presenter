@@ -143,20 +143,16 @@ describe('Selenium tests', async () => {
                     5000
                 );
 
-                // Click on the profile dropdown
                 await profileDropdown.click();
 
-                // Wait for the logout link to be clickable
                 const logoutLink = await driver.wait(
                     until.elementLocated(By.id('logout-link')),
                     5000
                 );
                 await driver.wait(until.elementIsVisible(logoutLink), 5000);
 
-                // Click on the logout link
                 await logoutLink.click();
 
-                // Optional: Assert that the user is redirected to the login page (or another page)
                 await driver.wait(
                     until.elementLocated(By.id('login-button')),
                     5000
