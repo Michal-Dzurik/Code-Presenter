@@ -15,7 +15,10 @@ export const Navigation = (): React.ReactElement => {
             </div>
 
             {isLoggedIn() ? (
-                <div className="dropdown dropdown-end mr-4">
+                <div
+                    className="dropdown dropdown-end mr-4"
+                    id="profile-dropdown"
+                >
                     <div
                         tabIndex={0}
                         role="button"
@@ -39,7 +42,9 @@ export const Navigation = (): React.ReactElement => {
                             <Link to={'my-codes/'}>My codes</Link>
                         </li>
                         <li>
-                            <a onClick={logOut}>Logout</a>
+                            <a id="logout-link" onClick={logOut}>
+                                Logout
+                            </a>
                         </li>
                     </ul>
                 </div>

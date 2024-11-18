@@ -43,7 +43,6 @@ export const AuthProvider = ({ children }: { children: any }) => {
         try {
             await signInWithPopup(auth, googleAuth).then(
                 (data: UserCredential) => {
-                    console.log(data?.user);
                     saveAuthUser(data?.user);
                     setUser(data?.user);
                 }
