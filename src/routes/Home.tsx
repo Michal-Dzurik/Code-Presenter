@@ -12,9 +12,7 @@ export const Home = (): React.ReactElement => {
                             Welcome in Code Presenter
                         </h1>
                         <p className="py-6 max-w-md m-auto">
-                            This is the best way to present gift, discount,
-                            steam or any kind of code to your loved ones. You
-                            can choose from various of styles.
+                            The best way to gift a digital goods!
                         </p>
                         <Link to="/editor" className="btn btn-primary">
                             Let's do it!
