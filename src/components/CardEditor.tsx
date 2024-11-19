@@ -75,6 +75,7 @@ export const CardEditor = (props: Props): React.ReactElement => {
             onSubmit={handleSubmit}
         >
             <TextInput
+                id='card-heading-input'
                 label="Heading"
                 value={card.heading || ''}
                 handleChange={handleHeadingChange}
@@ -83,6 +84,7 @@ export const CardEditor = (props: Props): React.ReactElement => {
             />
 
             <TextInput
+                id='card-code-input'
                 label="Code"
                 value={card.code || ''}
                 handleChange={handleCodeChange}
@@ -91,6 +93,7 @@ export const CardEditor = (props: Props): React.ReactElement => {
             />
 
             <TextInput
+                id='card-applicable-at-input'
                 label="Applicable at"
                 value={card.applicableAt || ''}
                 handleChange={handleApplicableAtChange}
@@ -99,6 +102,7 @@ export const CardEditor = (props: Props): React.ReactElement => {
             />
 
             <TextInput
+                id='card-discount-input'
                 label="Discount"
                 value={card.discount || ''}
                 handleChange={handleDiscountChange}
@@ -106,7 +110,7 @@ export const CardEditor = (props: Props): React.ReactElement => {
                 maxLength={6}
             />
 
-            <button className="btn btn-primary mt-6" type="submit">
+            <button id='editor-submit-button' className="btn btn-primary mt-6" type="submit">
                 Submit
             </button>
         </form>

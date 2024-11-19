@@ -9,10 +9,11 @@ interface Props {
     placeholder?: string;
     maxLength?: number;
     minLength?: number;
+    id?: string;
 }
 
 export const TextInput = (props: Props): React.ReactElement => {
-    const { label, value, handleChange, placeholder, minLength, maxLength } =
+    const { label, value, handleChange, placeholder, minLength, maxLength, id} =
         props;
 
     return (
@@ -20,7 +21,7 @@ export const TextInput = (props: Props): React.ReactElement => {
             <div className="label">
                 <span className="label-text">{label}</span>
             </div>
-            <input
+            <input id={id}
                 type="text"
                 placeholder={placeholder}
                 className="input input-bordered w-full max-w-xs placeholder:text-gray-600"

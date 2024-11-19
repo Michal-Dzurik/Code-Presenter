@@ -26,7 +26,7 @@ export const CardControls = (props: Props): React.ReactElement => {
                                 <a
                                     href="#"
                                     onClick={() => beforeDelete(cardId)}
-                                    className=" btn btn-error text-white btn"
+                                    className="card-delete-button btn btn-error text-white btn"
                                 >
                                     Delete
                                 </a>
@@ -34,7 +34,7 @@ export const CardControls = (props: Props): React.ReactElement => {
                             <Link
                                 target="_blank"
                                 to={`/cards/${cardId}`}
-                                className="btn btn-primary text-white ml-2 text-sm"
+                                className="card-view-button btn btn-primary text-white ml-2 text-sm"
                             >
                                 View
                             </Link>
@@ -44,14 +44,14 @@ export const CardControls = (props: Props): React.ReactElement => {
                             <div className={'mt-4'}>
                                 <Link
                                     to={`/editor/${cardId}`}
-                                    className="btn-block btn-sm btn btn-primary text-white mr-6 text-sm"
+                                    className="card-edit-button btn-block btn-sm btn btn-primary text-white mr-6 text-sm"
                                 >
                                     Edit
                                 </Link>
                                 <a
                                     href="#"
                                     onClick={() => beforeDelete(cardId)}
-                                    className="btn btn-error btn-sm text-white btn-block mt-2"
+                                    className="card-delete-button btn btn-error btn-sm text-white btn-block mt-2"
                                 >
                                     Delete
                                 </a>

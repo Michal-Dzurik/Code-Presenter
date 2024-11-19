@@ -24,7 +24,7 @@ export const DiscountCard = (props: Props): React.ReactElement => {
                     <div className="w-8 h-8 bg-base-100 rounded-full absolute top-1/2 right-0 transform -translate-y-1/2 translate-x-1/2"></div>
 
                     <div className="flex-grow flex items-center justify-center flex-col w-3/4">
-                        <h3 className="text-[#ddd] text-center text-lg">
+                        <h3 className="card-heading text-[#ddd] text-center text-lg ">
                             {card.heading || 'Love you'}
                         </h3>
                     </div>
@@ -49,21 +49,21 @@ export const DiscountCard = (props: Props): React.ReactElement => {
                         <div className="w-3/4 h-0 absolute top-2/3 left-1/2 transform -translate-y-1/2 -translate-x-1/2 border border-dashed border-1 border-[#c58e4c] mr-1/8 ml-1/8"></div>
 
                         <p className="mt-2 text-xs text-[#ddd] text-center absolute bottom-6 left-1/2 transform -translate-x-1/2 w-3/4">
-                            Applicable on {card.applicableAt || 'Steam'}
+                            Applicable on <span className='card-applicable-at'>{card.applicableAt || 'Steam'}</span>
                         </p>
 
                         <div className="flex-grow flex items-center justify-center flex-col w-3/4">
-                            <h2 className="text-[#c58e4c] text-center text-6xl font-bold">
+                            <h2 className="card-discount text-[#c58e4c] text-center text-6xl font-bold">
                                 {card.discount || '-10%'}
                             </h2>
-                            <h3 className="text-[#ddd] text-center text-lg">
+                            <h3 className="card-heading text-[#ddd] text-center text-lg">
                                 {card.heading || 'Love you'}
                             </h3>
                         </div>
 
                         <CodeView
                             code={card.code}
-                            className="bg-[#c58e4c] text-[#ddd] hover:bg-[#ac7431]"
+                            className="card-code bg-[#c58e4c] text-[#ddd] hover:bg-[#ac7431]"
                         />
                     </div>
                     {useControls ? (

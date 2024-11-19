@@ -6,6 +6,7 @@ interface Props {
     handleChange: (value: string) => void;
     defaultOptionText: string;
     isDefaultDisabled: boolean;
+    id?: string;
 }
 
 export const Select = (props: Props): React.ReactElement => {
@@ -15,10 +16,12 @@ export const Select = (props: Props): React.ReactElement => {
         handleChange,
         defaultOptionText,
         isDefaultDisabled,
+        id
     } = props;
 
     return (
         <select
+            id={id}
             value={value}
             className="select select-bordered w-full max-w-xs"
             onChange={(element) => {

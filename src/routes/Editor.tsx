@@ -134,6 +134,7 @@ export const Editor = (): React.ReactElement => {
             <div className="flex justify-center items-center h-screen w-screen flex-col">
                 <div className="flex justify-center items-center content-center flex-row mb-8">
                     <Select
+                        id='card-type-select'
                         value={card.type}
                         options={cardTypeMap}
                         handleChange={handleSelectChange}

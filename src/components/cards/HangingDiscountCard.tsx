@@ -25,7 +25,7 @@ export const HangingDiscountCard = (props: Props): React.ReactElement => {
                         <div className="w-9 h-2 bg-base-100 rounded-lg absolute top-4 left-1/2 transform -translate-x-1/2"></div>
 
                         <div className="flex-grow flex items-center justify-center flex-col mb-4 w-3/4">
-                            <h3 className="text-black text-center mt-4 ">
+                            <h3 className="card-heading text-black text-center mt-4 ">
                                 {card.heading || 'Love you 🩷'}
                             </h3>
                         </div>
@@ -50,21 +50,21 @@ export const HangingDiscountCard = (props: Props): React.ReactElement => {
                         <div className="w-12 h-4 bg-base-100 rounded-lg absolute top-4 left-1/2 transform -translate-x-1/2"></div>
 
                         <p className="mt-2 text-xs text-slate-500 text-center absolute bottom-6 left-1/2 transform -translate-x-1/2 w-3/4">
-                            Applicable on {card.applicableAt || 'Steam'}
+                            Applicable on <span className='card-applicable-at'>{card.applicableAt || 'Steam'}</span>
                         </p>
 
                         <div className="flex-grow flex items-center justify-center flex-col mt-8 w-3/4">
-                            <h2 className="text-black text-center text-6xl font-bold">
+                            <h2 className="card-discount text-black text-center text-6xl font-bold">
                                 {card.discount || '-10%'}
                             </h2>
-                            <h3 className="text-black text-center mt-4 ">
+                            <h3 className="card-heading text-black text-center mt-4 ">
                                 {card.heading || 'Love you 🩷'}
                             </h3>
                         </div>
 
                         <CodeView
                             code={card.code}
-                            className="bg-gray-200 text-gray-800 hover:bg-gray-300"
+                            className="card-code bg-gray-200 text-gray-800 hover:bg-gray-300"
                         />
                     </div>
                     {useControls ? (
