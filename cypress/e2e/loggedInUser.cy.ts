@@ -4,51 +4,93 @@ declare global {
     namespace Cypress {
         interface Chainable {
             visitAndLogIn(url: string): Chainable;
+            createCard(card: {
+                heading: string;
+                applicableAt: string;
+                code: string;
+                type: number;
+                discount: string;
+            }): void;
+            cardIs(card: {
+                heading: string;
+                applicableAt: string;
+                code: string;
+                type: number;
+                discount: string;
+            }): void;
+            on(event: string, callback: () => boolean): void
         }
     }
 }
 
 describe('Logged in user', () => {
+    var BASE_URL: string;
+    var TEST_CARD: {
+        heading: string;
+        applicableAt: string;
+        code: string;
+        type: number;
+        discount: string;
+    };
 
-    context('Authed actions', () => {
-        it('should log in', () => {
-            cy.visitAndLogIn('http://localhost:3000/');
-
-            // When the dropdown is displayed we are logged in
-            cy.get('#profile-dropdown').should('be.visible');
-        });
-
-        it('should create a card and view it', () => {
-            cy.visitAndLogIn('http://localhost:3000/editor');
-
-            // Fill out the form
-            cy.get('#card-type-select').select('1');
-            cy.get('#card-heading-input').type('Test');
-            cy.get('#card-code-input').type('Test');
-            cy.get('#card-applicable-at-input').type('Test');
-            cy.get('#card-discount-input').type('Test');
-            cy.get('#editor-submit-button').click();
-
-            // Created successfully TODO: After implementing alert system, we will look for that
-            cy.get('.card-view-button').should('be.visible');
-
-            // We can see card with all it's values
-            cy.get('.card-heading').should('be.visible').and('contain', 'Test');
-            cy.get('.card-code').should('be.visible').and('contain', 'Test');
-            cy.get('.card-discount').should('be.visible').and('contain', 'Test');
-            cy.get('.card-applicable-at').should('be.visible').and('contain', 'Test');
-        });
-
-        it('should log out', () => {
-            cy.visitAndLogIn('http://localhost:3000/');
-
-            // log out
-            cy.get('#profile-dropdown').click();
-            cy.get('#logout-link').click();
-
-            // Confirm log out
-            cy.get('#login-button').should('be.visible');
-        });
+    before(() => {
+        // @ts-ignore
+        BASE_URL = Cypress.config('baseUrl');
+        TEST_CARD = {
+            heading: 'test',
+            applicableAt: 'test',
+            code: 'test',
+            discount: 'test',
+            type: 1,
+        };
     });
 
+    it('should log in', () => {
+        cy.visitAndLogIn(BASE_URL);
+
+        // When the dropdown is displayed we are logged in
+        cy.get('[data-testid="profile-dropdown"]').should('be.visible');
+    });
+
+    it('should create a card and delete it', () => {
+        cy.createCard(TEST_CARD);
+
+        cy.get('.card-delete-button').click();
+        cy.on('window:confirm', () => true);
+
+        cy.get('[data-testid="card-type-select"]').should(
+            'have.value',
+            null
+        );
+    });
+
+    it('should be able to delete the card from editor', () => {
+        cy.createCard(TEST_CARD);
+
+        cy.get('.card-view-button').invoke('removeAttr', 'target').click();
+
+        cy.cardIs(TEST_CARD);
+
+        cy.visit(BASE_URL + '/my-codes');
+
+        // Delete the card
+        cy.get('.card-delete-button').click();
+        cy.on('window:confirm', () => true);
+
+        cy.get('[data-testid="no-cards"]').should(
+            'contain.text',
+            'Nothing :\\'
+        );
+    });
+
+    it('should log out', () => {
+        cy.visitAndLogIn(BASE_URL);
+
+        // log out
+        cy.get('[data-testid="profile-dropdown"]').click();
+        cy.get('[data-testid="logout-link"]').click();
+
+        // Confirm log out
+        cy.get('[data-testid="login-button"]').should('be.visible');
+    });
 });

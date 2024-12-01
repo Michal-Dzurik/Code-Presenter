@@ -94,7 +94,7 @@ export const MyCards = (props: Props): React.ReactElement => {
                             </div>
                         ))
                     ) : cardsFetched ? (
-                        <p>Nothing :\</p>
+                        <p data-testid='no-cards'>Nothing :\</p>
                     ) : (
                         <span className="loading loading-spinner loading-lg"></span>
                     )}

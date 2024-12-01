@@ -50,7 +50,10 @@ export const HangingDiscountCard = (props: Props): React.ReactElement => {
                         <div className="w-12 h-4 bg-base-100 rounded-lg absolute top-4 left-1/2 transform -translate-x-1/2"></div>
 
                         <p className="mt-2 text-xs text-slate-500 text-center absolute bottom-6 left-1/2 transform -translate-x-1/2 w-3/4">
-                            Applicable on <span className='card-applicable-at'>{card.applicableAt || 'Steam'}</span>
+                            Applicable on{' '}
+                            <span className="card-applicable-at">
+                                {card.applicableAt || 'Steam'}
+                            </span>
                         </p>
 
                         <div className="flex-grow flex items-center justify-center flex-col mt-8 w-3/4">

@@ -84,13 +84,15 @@ export const Editor = (): React.ReactElement => {
 
     const deleteCard = useCallback(
         async (id: string) => {
-            try {
-                const docRef = doc(database, 'cards', id);
-                await deleteDoc(docRef);
+            if (window.confirm('Are you sure you want to delete this card?')){
+                try {
+                    const docRef = doc(database, 'cards', id);
+                    await deleteDoc(docRef);
 
-                setId('');
-                setEditMode(false);
-            } catch (error) {}
+                    setId('');
+                    setEditMode(false);
+                } catch (error) {}
+            }
         },
         [database, id]
     );
@@ -134,7 +136,7 @@ export const Editor = (): React.ReactElement => {
             <div className="flex justify-center items-center h-screen w-screen flex-col">
                 <div className="flex justify-center items-center content-center flex-row mb-8">
                     <Select
-                        id='card-type-select'
+                        testId="card-type-select"
                         value={card.type}
                         options={cardTypeMap}
                         handleChange={handleSelectChange}

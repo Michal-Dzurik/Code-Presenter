@@ -8,7 +8,10 @@ export const Home = (): React.ReactElement => {
             <div className="hero min-h-screen">
                 <div className="hero-content text-center">
                     <div className="">
-                        <h1 className="text-5xl font-bold max-w-xxl">
+                        <h1
+                            className="text-5xl font-bold max-w-xxl"
+                            data-testid="home-heading"
+                        >
                             Welcome in Code Presenter
                         </h1>
                         <p className="py-6 max-w-md m-auto">

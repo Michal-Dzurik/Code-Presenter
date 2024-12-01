@@ -49,7 +49,10 @@ export const DiscountCard = (props: Props): React.ReactElement => {
                         <div className="w-3/4 h-0 absolute top-2/3 left-1/2 transform -translate-y-1/2 -translate-x-1/2 border border-dashed border-1 border-[#c58e4c] mr-1/8 ml-1/8"></div>
 
                         <p className="mt-2 text-xs text-[#ddd] text-center absolute bottom-6 left-1/2 transform -translate-x-1/2 w-3/4">
-                            Applicable on <span className='card-applicable-at'>{card.applicableAt || 'Steam'}</span>
+                            Applicable on{' '}
+                            <span className="card-applicable-at">
+                                {card.applicableAt || 'Steam'}
+                            </span>
                         </p>
 
                         <div className="flex-grow flex items-center justify-center flex-col w-3/4">
